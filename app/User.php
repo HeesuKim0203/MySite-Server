@@ -19,6 +19,10 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    public $itemstamps = false ;
+
+
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -35,5 +39,26 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];
+    ]; 
+
+
+    function add_token($email, $password, $token) {
+        
+        $result = self::where([
+                [ 'email', '=', $email ], 
+                [ 'password',  '=', $password]
+            ])
+            ->update(['remember_token' => $token]) ;
+        
+        return $result ;
+    	
+    }
+
+    function check_token($token) {
+    
+        $result = self::where('remember_token', '=', '$token') ;
+
+        return $result ;
+    }
+
 }

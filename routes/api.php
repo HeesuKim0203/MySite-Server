@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('contents', 'ContentController') ;
 Route::resource('images', 'ImageController');
+Route::resource('users', 'UserController@index');
 
