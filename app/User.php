@@ -6,7 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject ;
+
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -16,12 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password'
     ];
-
-    public $itemstamps = false ;
-
-
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,23 +40,48 @@ class User extends Authenticatable
     ]; 
 
 
-    function add_token($email, $password, $token) {
+    // function add_token($email, $password, $token) {
         
-        $result = self::where([
-                [ 'email', '=', $email ], 
-                [ 'password',  '=', $password]
-            ])
-            ->update(['remember_token' => $token]) ;
+    //     $result = self::where([
+    //             [ 'email', '=', $email ], 
+    //             [ 'password',  '=', $password]
+    //         ])
+    //         ->update(['token' => $token]) ;
         
-        return $result ;
+    //     return $result ;
     	
-    }
+    // }
 
-    function check_token($token) {
+    // function check_token($token) {
     
-        $result = self::where('remember_token', '=', '$token') ;
+    //     $result = self::where('token', '=', $token)->exists();
 
-        return $result ;
+    //     return $result ;
+    // }
+
+    // function logout($token) {
+        
+    //     $result = self::where('token', '=', $token)->update(['token' => 'logout']) ;
+
+    //     return $result ;
+    // }
+
+     /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier() {
+        return $this->getKey();
     }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims() {
+        return [];
+    }    
 
 }
