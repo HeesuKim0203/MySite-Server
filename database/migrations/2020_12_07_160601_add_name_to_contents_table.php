@@ -15,6 +15,7 @@ class AddNameToContentsTable extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
 		$table->id() ;
+		$table->string('image__url') ;
 		$table->string('title') ;
 		$table->integer('language_id') ;
 		$table->timestamps() ;

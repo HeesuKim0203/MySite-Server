@@ -25,13 +25,11 @@ class ContentController extends Controller
         $content_model = new \App\Content() ;
         $language_model = new \App\Language() ;
         $text_model = new \App\Text() ;
-        $image_model = new \App\Image() ;
 
         $language_id = $language_model->search_column($request->input('language')) ;
 
         $content_model->create_column($request->input('title'), $language_id[0]->id) ;
-        $text_model->create_column($request->input('css'), $request->input('html'), $content_model->max_id()) ;
-        $result = $image_model->create_column($request->input('url'), $content_model->max_id()) ;
+        $result = $text_model->create_column($request->input('css'), $request->input('html'), $content_model->max_id()) ;
 
         return $result ;
     }

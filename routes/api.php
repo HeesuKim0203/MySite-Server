@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Htpp\Controllers\ImageController ;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,11 +19,14 @@ use App\Http\Controllers\AuthController;
 
 
 Route::prefix('auth')->group(function () {
-    Route::post('register', 'AuthController@register');
+    Route::post('register', 'AuthController@register');   
     Route::post('login', 'AuthController@login');
     Route::get('refresh', 'AuthController@refresh');
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', 'AuthController@user');
-        Route::post('logout', 'AuthController@logout');
+	Route::post('logout', 'AuthController@logout') ; 
     });
 });
+
+Route::resource('images', 'ImageController') ;
+

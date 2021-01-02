@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage ;
+use App\Image ;
 
 class ImageController extends Controller
 {
     public function index()
-    {
-        return '[' . __METHOD__ . '] ' . 'respond the index page' ;  
+    {   
+        $model = new Image ;
+
+        $data = $model->get_all_column() ;
+
+        return response()->json([
+            'images' => $data
+        ]); ;  
     }
 
     public function create()
@@ -18,10 +25,15 @@ class ImageController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $url = $request->file('file')->store('images', 'public') ;
+    {    
+        $model = new Image() ;
 
-        return "http://54.145.229.76:80/storage/{$url}" ;
+        $url = $request->file('file')->store('images', 'public') ;
+        $make_url ="http://54.145.229.76:80/storage/{$url}" ;
+
+        $result = $model->create_column($make_url) ;
+	
+        return $result ;
     }
 
     public function show($id)
@@ -41,6 +53,10 @@ class ImageController extends Controller
 
     public function destroy($id)
     {
-        return '[' . __METHOD__ . '] ' . 'delete resource ' . $id;
+        $model = new Image() ;
+
+        $result = $model->delete_column($id) ;
+
+        return $result ;
     }
 }

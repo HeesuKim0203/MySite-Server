@@ -17,10 +17,6 @@ class AddNameToImagesTable extends Migration
             $table->id() ;
             $table->string('url') ;
         });
-        
-        Schema::table('images', function (Blueprint $table) {
-            $table->foreignId('content_id')->constrained()->onDelete('cascade') ;
-        });
     }
 
     /**
