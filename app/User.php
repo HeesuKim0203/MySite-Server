@@ -40,33 +40,6 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ]; 
 
-
-    // function add_token($email, $password, $token) {
-        
-    //     $result = self::where([
-    //             [ 'email', '=', $email ], 
-    //             [ 'password',  '=', $password]
-    //         ])
-    //         ->update(['token' => $token]) ;
-        
-    //     return $result ;
-    	
-    // }
-
-    // function check_token($token) {
-    
-    //     $result = self::where('token', '=', $token)->exists();
-
-    //     return $result ;
-    // }
-
-    // function logout($token) {
-        
-    //     $result = self::where('token', '=', $token)->update(['token' => 'logout']) ;
-
-    //     return $result ;
-    // }
-
      /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

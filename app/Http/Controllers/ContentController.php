@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request ;
+use App\Content;
 
 class ContentController extends Controller
 {
@@ -22,14 +23,14 @@ class ContentController extends Controller
 
     public function store(Request $request)
     {
-        $content_model = new \App\Content() ;
-        $language_model = new \App\Language() ;
-        $text_model = new \App\Text() ;
+        $content_model = new Content ;
 
-        $language_id = $language_model->search_column($request->input('language')) ;
-
-        $content_model->create_column($request->input('title'), $language_id[0]->id) ;
-        $result = $text_model->create_column($request->input('css'), $request->input('html'), $content_model->max_id()) ;
+        $result = $content_model->create_column(
+            $request->image_url,
+            $request->title,
+            $request->text,
+            $request->type
+        ) ;
 
         return $result ;
     }

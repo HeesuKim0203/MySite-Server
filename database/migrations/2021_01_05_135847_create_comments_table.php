@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNameToLanguagesTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class AddNameToLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('languages', function (Blueprint $table) {
-		$table->id() ;
-		$table->string('text') ;
-        });
+        Schema::create('comments', function (Blueprint $table) {
+	    $table->id();
+	    $table->string('user_name');
+	    $table->string('text');
+	    $table->string('password');
+            $table->timestamps();
+	});
     }
 
     /**
@@ -26,6 +29,6 @@ class AddNameToLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('languages');
+        Schema::dropIfExists('comments');
     }
 }

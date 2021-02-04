@@ -6,32 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Content extends Model
 {
-    protected $fillable = [ 'id', 'title', 'language_id', 'created_at', 'updated_at' ] ;
+    protected $fillable = [ 'id', 'title', 'text', 'type', 'image_url' ] ;
 
     public function get_all_column() 
     {
         $result = self::select('*')
-                ->join('images', 'contents.id', 'images.content_id')
-                ->join('texts', 'contents.id', 'texts.content_id')
                 ->get() ;
 
         return $result ;
     }
 
-    public function create_column($title, $language_id) 
+    public function create_column($image_url, $title, $text, $type) 
     {
         $result = self::create([
             'title' => $title,
-            'language_id' => $language_id,
+            'image_url' => $image_url,
+            'text' => $text,
+            'type' => $type,
         ]) ;
-
         return $result ;
     }
 
-    public function max_id()
-    {
-        $result = self::max('id') ;
+    // public function max_id()
+    // {
+    //     $result = self::max('id') ;
         
-        return $result ;
-    }
+    //     return $result ;
+    // }
 }

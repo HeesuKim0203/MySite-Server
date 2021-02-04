@@ -28,5 +28,8 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+Route::resource('contents', 'ContentController') ;
+Route::resource('projects', 'ProjectController') ;
 Route::resource('images', 'ImageController') ;
-
+Route::resource('comments', 'CommentController') ;
+Route::post('comments/check', 'CommentController@checkUser') ;
