@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $fillable = [ 'id', 'user_name', 'text', 'password', 'content_id' ] ;
+    protected $fillable = [ 'id', 'user_name', 'text', 'password', 'content_id', 'updated_at' ] ;
 
     public function create_tuple($user_name, $text, $password, $content_id) {
         $result = self::create([
@@ -20,7 +20,7 @@ class Comment extends Model
     }
 
     public function id_select_tuple($id) {
-        $result = self::select('id, user_name, text, content_id', 'update_at') 
+        $result = self::select('id', 'user_name', 'text', 'content_id', 'updated_at') 
                         ->where('content_id', '=', $id)
                         ->get() ;
 

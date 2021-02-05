@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comment ;
+use Illuminate\Support\Arr ;
 
 class CommentController extends Controller
 {
@@ -44,7 +45,7 @@ class CommentController extends Controller
             $request->content_id
         ) ;
 
-        return $result ;
+        return response()->json(['result' => $result ? Arr::except($result, [ 'password' ]) : false])  ;
     }
 
     /**
@@ -114,6 +115,6 @@ class CommentController extends Controller
             $request->comment_id
         ); 
 
-        return response()->json(['result' => $result ? true : false]) ;
+        return response()->json(['result' => $result]) ;
     }
 }

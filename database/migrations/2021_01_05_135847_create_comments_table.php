@@ -20,6 +20,9 @@ class CreateCommentsTable extends Migration
 	    $table->string('password');
             $table->timestamps();
 	});
+
+	
+
     }
 
     /**
