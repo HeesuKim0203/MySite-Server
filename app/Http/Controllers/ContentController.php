@@ -48,10 +48,10 @@ class ContentController extends Controller
     public function update(Request $request, $id)
     {
         $model = new \App\Content() ;
-        
-        
-
-        return '[' . __METHOD__ . '] ' . 'validate the form data from the edit form and update the resource having id of ' . $id;
+    	    
+        $result = $model->update_text($id, $request->text) ;
+    
+        return response()->json([ 'result' => $request->text]) ;
     }
 
     public function destroy($id)

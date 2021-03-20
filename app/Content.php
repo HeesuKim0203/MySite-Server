@@ -27,6 +27,16 @@ class Content extends Model
         return $result ;
     }
 
+    public function update_text($id, $text)
+    {
+	    $result = self::where('id', '=', $id)
+		->update(['text' => $text]) ;
+
+
+	    return $result ; 
+
+    }
+
     // public function max_id()
     // {
     //     $result = self::max('id') ;

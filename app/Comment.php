@@ -34,7 +34,7 @@ class Comment extends Model
                      -> where('id', '=', $id)
                      ->get() ;
                      
-        return $result ? true : false ;
+        return count($result) ? true : false ;
     }
  
     public function delete_tuple($id) {

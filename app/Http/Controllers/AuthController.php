@@ -55,8 +55,7 @@ class AuthController extends Controller
     {
         $user = User::find(Auth::user()->id);
         return response()->json([
-            'status' => 'success',
-            'data' => $user
+            'status' => 'success'
         ]);
     }
     public function refresh()
