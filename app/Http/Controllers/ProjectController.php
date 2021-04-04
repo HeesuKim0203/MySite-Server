@@ -29,7 +29,7 @@ class ProjectController extends Controller
     {
         $model = new Project ;
 
-        $result = $model->create_column($request->title, $request->url, $request->period, $request->image, $request->description) ;
+        $result = $model->create_column($request->title, $request->url, $request->period, $request->image, $request->description, $request->language) ;
 
         return $result ;
     }

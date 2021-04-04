@@ -55,8 +55,9 @@ class ImageController extends Controller
     {
         $model = new Image() ;
 
-        $result = $model->delete_column($id) ;
+	$result = $model->delete_column($id) ;
+	Storage::delete(app_path("images/{$result->fileName}")) ;
 
-        return $result ;
+        return $result->deleteResult ;
     }
 }

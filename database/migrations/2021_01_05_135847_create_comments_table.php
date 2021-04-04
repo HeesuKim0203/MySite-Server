@@ -18,12 +18,11 @@ class CreateCommentsTable extends Migration
 	    $table->string('user_name');
 	    $table->string('text');
 	    $table->string('password');
-            $table->timestamps();
+        $table->timestamps();
 	});
 
 	Schema::table('comments', function (Blueprint $table){
 	    $table->foreignId('content_id')->constrained()->onDelete('cascade') ;
-	
 	}) ;
 
     }

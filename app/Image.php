@@ -25,8 +25,12 @@ class Image extends Model
     }
 
     public function delete_column($id) {
+        $url = self::select('url')->where('id', '=', $id)->get() ;    
+
+        $fileName = explode('/', $url)[count($url) - 1] ;
+
         $result = self::where('id', '=', $id)->delete() ;
 
-        return $result ;
+        return [ "deleteResult" => $result, "fileName" => $fileName ];
     }
 }

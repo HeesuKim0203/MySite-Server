@@ -1,0 +1,274 @@
+-- MySQL dump 10.13  Distrib 5.7.33, for Linux (x86_64)
+--
+-- Host: localhost    Database: laravel
+-- ------------------------------------------------------
+-- Server version	5.7.33-0ubuntu0.18.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `comments`
+--
+
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `content_id` bigint(20) unsigned DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `content_id` (`content_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`content_id`) REFERENCES `contents` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comments`
+--
+
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contents`
+--
+
+DROP TABLE IF EXISTS `contents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contents` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `image_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` text COLLATE utf8mb4_unicode_ci,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contents`
+--
+
+LOCK TABLES `contents` WRITE;
+/*!40000 ALTER TABLE `contents` DISABLE KEYS */;
+INSERT INTO `contents` VALUES (11,'http://54.145.229.76:80/storage/images/kNRDMkRuRrhXTE5mlcwL08oO6rOY2viY9dErC0fg.png','Webpack을 이용하여 build파일을 최적화 해보자','# 계기\n> My Site를 S3에 올리 두근 거리는 마음으로 URL을 검색해 들어가 보았다. 그런데 로딩이 생각보다 오래걸려   \n> 반환 되는 bulid된 js파일의 용량을 보니 자그마치 1.8MB나 되었다. 나는 바로 node build 파일을 청소하는 방법을 찾았고   \n> 다양한 방법이 있었지만 처음 하는 거라 build 파일의 크기를 눈으로 볼수 있는 webpack-bundle-analyzer를 사용해 보기로 하였다. (참고로 React-create-app으로 생성된 프로젝트이다.)\n\n# 과정 \n> ## 1) 모듈 다운\n> ```\n> npm install webpack-bundle-analyzer\n> ```\n> ## 2) analize.js를 \"/\" 밑에 생성   \n\n> <img src=\"http://54.145.229.76:80/storage/images/IRbQelEOvkqHXpmrvnDm1P2s6pu1B3iuAERBfDat.png\" width=\"200\"/>   \n\n> ## 3) analize.js 작성\n> ``` javascript\n> process.env.NODE_ENV = \'production\' ;\n>\n>const webpack = require(\'webpack\') ;\n>const BundleAnalyzerPlugin = require(\'webpack-bundle-analyzer\').BundleAnalyzerPlugin ;\n>const webpackConfigProd = require(\'react-scripts/config/webpack.config\')(\'production\') ;\n>\n>webpackConfigProd.plugins.push( new BundleAnalyzerPlugin({\n>    analyzerMode : \'static\',\n>    reportFilename : \'bundle-report.html\',\n>    openAnalyzer : false,\n>    generateStatsFile : true,\n>    statsFilename : \'bundle-stats.json\'\n> })) ;\n>\n>webpack(webpackConfigProd, (err, stats) => {\n>    if( err || stats.hasErrors() ) {\n>        console.error(err)\n>    }\n>}) ;\n> ```\n> react-script의 webpack설정에 plugins 옵션에 webpack-bundle-analyzer를 push한다.\n> ## 4) build\n> 필자는 여기서부터 문제가 생겼다. 분명 코드 상으로 react-scripts의 webpack설정을 당겨서 실행시키는 것인데   \n> favicon과 logo  Image파일이 build 되지 않는 문제가 생겼다.\n> ```\n> npm run build \n> ```\n> ```\n> npm analize.js\n> ```\n> 순으로 실행하니 제대로 build되었다.   \n> ## 5) 눈으로 확인 후 작업\n\n> <img src=\"http://54.145.229.76:80/storage/images/GNKdwpnfg1L0iq7PmjUMIKi8OvUmblvJRAYCIb0W.png\" width=\"800\"/>\n\n> 위 그림으로 보면 font awesome이 비정상적으로 많은 용량을 차지하고 있다.   \n> 또한 chart.js도 전체가 build되는 것 같았다.   \n\n> <img src=\"http://54.145.229.76:80/storage/images/wtYnBcbg4PU6ClJsFGfwQrzJTqwn0jyWely8fqci.png\" width=\"700\"/> \n\n> 실수 발견 따로 import를 해와야 되는 상황인데 필자가 전체를 import하고 있었다.\n\n> <img src=\"http://54.145.229.76:80/storage/images/xoJ55G3s54tgvlp8xDoXBhKOXnHIcly5KGfkVX3O.png\" width=\"700\" />\n\n> -- 따로 import 하도록 수정 완료 --   \n> 다음은 chart.js 차례이다.   \n> 살펴보니 [chart.js Document](https://www.chartjs.org/docs/latest/getting-started/installation.html)에 들어가니 이렇게 따로 build파일을 제공하고 있었다.\n\n> <img src=\"http://54.145.229.76:80/storage/images/cRCaCIXIAVfRQXPjqJS5IUon2LDxLhx2auTLiq6U.png\" width=\"450\"/>\n\n> 이렇게 나는 react-scripts의 config 파일안의 webpack.config.js의 alias옵션에 chart.min.js을 직접 추가 해주었다.   \n> 열심히 수정 후 결과는 \n\n> <img src=\"http://54.145.229.76:80/storage/images/MShMAZHkuuDmskJ1m5YdBx1rKuvNzb2gV2rOqDNA.png\"  width=\"800\"/>\n\n\n> 짜잔 fontawesome과 chart.js의 용량이 눈에 띄게 줄었다.    \n\n> <img src=\"http://54.145.229.76:80/storage/images/5Dw02CHwU4T1tKOHEptJq1VOOIYrxjkFpBssm1kj.png\"\nwidth=\"700\" />\n\n> 변화 1.8MB -> 831KB\n\n# 결론\n실제 릴리스를 목적으로 만들고 있는 터라 굉장히 신경 쓰면서 만들었지만 데브옵스에 관한 지식이 없어 꽤나 고생중이다.    \n앞으로 더 줄여야겠지만 일단은 다른 프로젝트도 적용 시킨 후에 다시 봐야겠다.\n\n# 2021-03-21 일자 최적화\n어느날 문득 Moment.js는 어디서 나온건가 생각이나서 여러가지를 찾아봤는데 chart.js자체에서 나온거라는 생각이 들었다. 그래서 alias옵션을 chart.bundle.min.js로 변경해주었다. \n\n<img src=\"http://54.145.229.76:80/storage/images/Wx83XuVAHY9m8HxbPQwqJHrAqUoHmTwvad1rksQF.png\" width=\"450\"/>\n\n\n<img \nsrc=\"http://54.145.229.76:80/storage/images/P8gTrzAveHJZntw3a3QJwA5aVMTc7TWi5N4ghbOV.png\"\nwidth=\"800\" />','NodeJs','2021-03-16 12:52:53','2021-03-22 23:40:32'),(12,'http://54.145.229.76:80/storage/images/w9ZBJ0sZy4agFvleNUQPNTE4Vcsy8oH6aZmU2nD6.png','React에서 Seo개선을 위한 robots.txt 세팅하기','# 계기\n>  My Site를 Release하기 위해 데브옵스에 대해서 알아보던중 seo를 최적화 해야된다는 말이 계속나와서 관심이 생겨 찾아보게 되었다.    \n> 필자가 알아본 바로는 \"검색엔진최적화 (Search Engine Optimization, SEO) 검색자(유저)를 이해하고 이에 충실히 맞춰 웹페이지의 콘텐츠를 제작, 검색결과 페이지에서 잘 노출되도록 웹 페이지의 태그와 링크 구조를 개선하여 유입 유저를 늘리는 것\"이라고 할 수 있다\n\n# 과정\n> ## 1. 모듈 다운\n> ```\n> npm install react-router-sitemap\n> ```\n> ## 2. sitemapRoutes.js 파일 생성\n>  기존의 Router 파일로 시도하면 babel 에러가 날 것입니다.   \n>  그래서 자신의 Router구조만 적은 파일을 생성합니다.\n> ``` javascript\n> import React from \'react\' ;\n> import { BrowserRouter as Router, Route, Switch, Redirect } from \'react-router-dom\' ;\n>\n>\n> const Template = () => {\n>    return (\n>            <Router>\n>                    <Switch>\n>                        <Route path={HOME} />\n>                        <Route path={DOCUMENT}  />\n>                        <Route path={PROFILE}  />\n>                        <Route path={WRITE} />\n>                        <Redirect path=\"*\" to={HOME} />\n>                    </Switch>\n>            </Router>\n>    ) ;\n> } ;\n>\n> export default Template ;\n> ```\n> 필자는 이렇게 작성했다.\n> ## 3. stiemapGenerator.js 파일 생성\n> ``` javascript\n>require(\"babel-register\")({\n>    presets: [\"es2015\", \"react\"]\n>  });\n>   \n>  const router = require(\"./sitemapRoutes\").default; // siteRoutes 파일의 경로\n>  const Sitemap = require(\"react-router-sitemap\").default;\n>  \n>  function generateSitemap() {\n>      return (\n>        new Sitemap(router)\n>            .build(\"http://example.com\"). // 도메인 주소 작성\n>            .save(\"./public/sitemap.xml\") // sitempa.xml이 생성될 경로\n>      );\n>  }\n>  \n>  generateSitemap(); \n> ```\n> 여러분이 작성한 sitemapRoute.js 파일의 경로를 인식해 sitemap.xml를 생성해줄 scripts다.\n> ## 4. babel 모듈 설치\n> ```\n> npm install @babel/core -D\n> npm install @babel/node -D\n> npm install babel-cli -D\n> npm install babel-preset-es2015 -D\n> npm install babel-preset-react -D\n> npm install babel-register -D\n> ```\n> 끝에 -D 옵션은 프로젝트 작동에 관한 코드가 아니라 개발자에게 도움이 되는 모듈이라는 것을 설명하기 위한 옵션이다.\n> ``` \n> babel-node (여러분의 경로)sitemapGenerator.js\n> ``` \n> ## 5. 실행\n> <img src=\"http://54.145.229.76:80/storage/images/NJCvfuSa4YkVCNIiLi8huJ1LhcbxsOBpCWFiHJzo.png\" width=\"200\"/>      \n\n> 이렇게 생성되는 것을 볼 수 있다.\n> ## 6. build에 적용하고 확인하기\n> 빌드에 적용하려면 package.json의 scripts 옵션에 밑에 두줄을 추가하고 \n\n> <img src=\"http://54.145.229.76:80/storage/images/l16WyNVlAmqMp2D8CzU3Rjq73acMsytHAhrkOPmk.png\" width=\"400\"/>\n\n> 실행하면 build될때 자동으로 실행되며 build파일 안에 sitemap.xml이 자동적으로 추가될 것이다.\n> ## 결과\n> <img src=\"http://54.145.229.76:80/storage/images/PahG3OJXw59zbkvgOsfR4kRoOvSAfORln1y6sSOi.jpg\" width=\"700\"/>\n\n>위에 처럼 정상 작동한다. 필자는 네이버와 구글의 봇만 통과 시킬 것이기 때문에 위처럼 세팅햇다.    \n> 아마 react-create-app으로 앱을 생성했으면 robots.txt가 기본적으로 있을 것이다. 또한 robots.txt의 밑에 sitemap을 설정할 수 있다.\n\n# 보너스 Nginx robots.txt 설정하기 \n> API용 서버가 하나 있는데 robots.txt 설정을 하지 않았다는 것을 알고 위 작업에 이어서 바로 해주었다.\n> ## 1. nginx.conf 수정하기\n> <img src=\"http://54.145.229.76:80/storage/images/AQ4QXJGkZ26zxyngGXwrZr8oYKfW9y4I6A7gb0LM.png\" width=\"400\"/>\n\n> 주의 할 점은 location / 위에 작성해야한다.   \n> 또한 필자는 Laravel을 이용하고 있는데 Laravel에는 기본적인 robots.txt가 public파일에 기본적으로 제공된다.\n> ## 결과\n> <img src=\"http://54.145.229.76:80/storage/images/CbfQHRTY2dl8YiGf6xDXqZmwUTXWHjIFFuFMZ9zH.jpg\" width=\"400\"/>\n\n> 필자는 봇의 접근을 다 막고 싶어서 위처럼 세팅했다.\n\n# 결론\n최근에 데브옵스에 대해 공부하는 데 robots.txt 설정이라는 것을 처음 해봤다. 모르는 것을 하나씩 알아가는 과장이 굉장히 즐겁다. 다음엔 나도 봇을 만들어서 크롤링 하는것을 한번 해보고 싶다고 생각하게 되었다.','React','2021-03-21 04:15:49','2021-03-21 04:17:42'),(14,'http://54.145.229.76:80/storage/images/lPx6SCFxgnIRK5kTG1cTvCYILMXg1KI9Aiq2Inb7.png','linux의 필요없는 파일들을 삭제하여 용량을 확보해보자','# 계기\n>  필자는 AWS의 EC2를 사용하여 linux를 벡엔드 서버로 사용하고 있다.   \n>  하지만 어느날 디스크의 모든 용량이 다 찼다는 에러가 났고 단순히 EC2의 용량을 늘려주면 되겠지라고 생각했지만   \n>  많은 사람들이 단순히 쓰지않는 파일을 제거하는 것만으로도 문제를 해결 할 수 있다고 하였다.   \n>  그래서 쓸대없는 파일을 찾아서 삭제하기로 하였다.\n\n# 과정\n> ## 1. 문제 찾기\n> 어떤 파일이 용량을 많이 차지하고 있나 범인을 찾기위해서 일단 용량을 체크해 봤다. \n> ```\n> df -h\n> ```\n> <img src=\"http://54.145.229.76:80/storage/images/FaEEMCLIm0dyGYMjbCD9lu4qpAQk2vcN7b1mSbQX.png\" \n width=\"400\"/>   \n> 음 가용 용량이 442M밖에 없다고 나온다. 5%라..  \n> 이때부터 필자는 범인 찾기에 돌입했다.   \n\n> <img src=\"http://54.145.229.76:80/storage/images/kg5DEmAIUtPIZ4cK0rnMSAjFFnHoJkehclEoiVpP.png\" \nwidth=\"400\" />    \n>  var파일이 1.2GB나 되는 것을 보고 log파일이 문제인가 싶었다.   \n> 그래서 log파일을 정리하였다.\n> #### Text 내용만 삭제하는 명령어\n> ```\n> cat /dev/null > [파일이름]\n> ```\n> 추가적으로 잡다한 log 파일 삭제   \n> 몇몇 중요 파일은 Text만 삭제해 주고 나머지는 다 삭제 하였다.   \n> ... 그런데 변화가 없다.\n> 용량이 줄긴 했는데 10M 밖에 줄지 않았다.\n> 그래서 다시 찾아 보니 현재 빌드 되고 있는 커널이 아니라 오래된 커널이 남으면 용량이 가득찬다는 글을 발견하였다.   \n> 그래서 나도 현재 사용되고 있는 커널과 남아 있는 커널을 찾았다.  \n> #### 현재 빌드된 커널 \n> ``` \n> uname -r\n> ```\n> <img src=\"http://54.145.229.76:80/storage/images/OLSd1ZzAgR2wTDa375NmNi6t2yf72iFcF0FyYiWm.png\"\nwidth=\"300\"/>\n> #### linux 커널 파일 찾기\n> ```\n> dpkg --list|grep linux-image\n> ```\n> <img src=\"http://54.145.229.76:80/storage/images/h2IdSCAWufJz43dX154SkmdYEANwOOpLvgmEt29T.png\" \nwidth=\"800\" />     \n> 커널 파일이 깨끗하다.. 지금 내가 빌드하고 있는 커널과 같은 버전의 커널 밖에 없었다..   \n> ## 2. 문제 해결\n> 또 다시 다른 문제를 찾다가 불필요한 패키지를 제거해 주는 apt-get autoremove라는 명령을 알게 되었다.\n> #### 불필요한 패키지 삭제\n> ```\n> apt-get autoremove\n> ```\n> <img src=\"http://54.145.229.76:80/storage/images/W1XvSAZ0srYiZKBuOrWKaxe6Ua28QpI08la9UcRq.png\" \nwidth=\"1000\"/>   \n> 234MB를 확보 할 수 있다고 한다.\n> 나는 삭제 했고 결과는 이렇다.   \n\n> <img src=\"http://54.145.229.76:80/storage/images/XQaxdzqovFCwLC7UpfqcNVevtHmoRVIDY21K0p71.png\" />\n   \n> 234MB의 용량을 확보 할 수 있었다.\n\n# 결론\n> 불필요한 파일을 찾는데 너무 오래 걸려서 시간대비 효율이 영 꽝인 작업이였다.\n> 이번일을 계기로 커널 파일에 대해서 알아 보고 싶어 졌다.','linux','2021-03-26 06:29:55','2021-03-26 06:29:55');
+/*!40000 ALTER TABLE `contents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `failed_jobs`
+--
+
+LOCK TABLES `failed_jobs` WRITE;
+/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `images`
+--
+
+DROP TABLE IF EXISTS `images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `images` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `images`
+--
+
+LOCK TABLES `images` WRITE;
+/*!40000 ALTER TABLE `images` DISABLE KEYS */;
+INSERT INTO `images` VALUES (23,'http://54.145.229.76:80/storage/images/IRbQelEOvkqHXpmrvnDm1P2s6pu1B3iuAERBfDat.png'),(25,'http://54.145.229.76:80/storage/images/e8Re9dOvWyGmvR3i7WfzVuLktmrlOj4j67nmtOnt.png'),(26,'http://54.145.229.76:80/storage/images/GNKdwpnfg1L0iq7PmjUMIKi8OvUmblvJRAYCIb0W.png'),(27,'http://54.145.229.76:80/storage/images/wtYnBcbg4PU6ClJsFGfwQrzJTqwn0jyWely8fqci.png'),(28,'http://54.145.229.76:80/storage/images/xoJ55G3s54tgvlp8xDoXBhKOXnHIcly5KGfkVX3O.png'),(29,'http://54.145.229.76:80/storage/images/cRCaCIXIAVfRQXPjqJS5IUon2LDxLhx2auTLiq6U.png'),(30,'http://54.145.229.76:80/storage/images/MShMAZHkuuDmskJ1m5YdBx1rKuvNzb2gV2rOqDNA.png'),(31,'http://54.145.229.76:80/storage/images/5Dw02CHwU4T1tKOHEptJq1VOOIYrxjkFpBssm1kj.png'),(32,'http://54.145.229.76:80/storage/images/kNRDMkRuRrhXTE5mlcwL08oO6rOY2viY9dErC0fg.png'),(33,'http://54.145.229.76:80/storage/images/Wx83XuVAHY9m8HxbPQwqJHrAqUoHmTwvad1rksQF.png'),(34,'http://54.145.229.76:80/storage/images/P8gTrzAveHJZntw3a3QJwA5aVMTc7TWi5N4ghbOV.png'),(35,'http://54.145.229.76:80/storage/images/w9ZBJ0sZy4agFvleNUQPNTE4Vcsy8oH6aZmU2nD6.png'),(36,'http://54.145.229.76:80/storage/images/NJCvfuSa4YkVCNIiLi8huJ1LhcbxsOBpCWFiHJzo.png'),(37,'http://54.145.229.76:80/storage/images/l16WyNVlAmqMp2D8CzU3Rjq73acMsytHAhrkOPmk.png'),(39,'http://54.145.229.76:80/storage/images/PahG3OJXw59zbkvgOsfR4kRoOvSAfORln1y6sSOi.jpg'),(40,'http://54.145.229.76:80/storage/images/AQ4QXJGkZ26zxyngGXwrZr8oYKfW9y4I6A7gb0LM.png'),(41,'http://54.145.229.76:80/storage/images/CbfQHRTY2dl8YiGf6xDXqZmwUTXWHjIFFuFMZ9zH.jpg'),(43,'http://54.145.229.76:80/storage/images/fdvVqyyeHsJ2YnDqD0prBxymUENGgkCly6ZVlaPG.png'),(44,'http://54.145.229.76:80/storage/images/nP8N7jWcyetNSobTsBBIk0X0V9cbTZ2b36fnxHJz.png'),(45,'http://54.145.229.76:80/storage/images/lPx6SCFxgnIRK5kTG1cTvCYILMXg1KI9Aiq2Inb7.png'),(46,'http://54.145.229.76:80/storage/images/FaEEMCLIm0dyGYMjbCD9lu4qpAQk2vcN7b1mSbQX.png'),(47,'http://54.145.229.76:80/storage/images/kg5DEmAIUtPIZ4cK0rnMSAjFFnHoJkehclEoiVpP.png'),(48,'http://54.145.229.76:80/storage/images/OLSd1ZzAgR2wTDa375NmNi6t2yf72iFcF0FyYiWm.png'),(49,'http://54.145.229.76:80/storage/images/h2IdSCAWufJz43dX154SkmdYEANwOOpLvgmEt29T.png'),(50,'http://54.145.229.76:80/storage/images/W1XvSAZ0srYiZKBuOrWKaxe6Ua28QpI08la9UcRq.png'),(51,'http://54.145.229.76:80/storage/images/XQaxdzqovFCwLC7UpfqcNVevtHmoRVIDY21K0p71.png'),(52,'http://54.145.229.76:80/storage/images/xftZMBfSDJvsXUuAuzYKYrBEcdyzlqbFJ09P93XO.gif'),(53,'http://54.145.229.76:80/storage/images/PuAlTpETKUBA3MK4HUaqWDbI57DpsS0egLkIyhNy.gif'),(54,'http://54.145.229.76:80/storage/images/IaajG5tTy13E3ONoLXUZodfdTBN1opoLOCjvAnXS.gif'),(55,'http://54.145.229.76:80/storage/images/rS7ZQMu5vr5VxT2W6ArD0dt0ancF9dDcTkIgLwtc.jpg');
+/*!40000 ALTER TABLE `images` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `migrations`
+--
+
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `migrations`
+--
+
+LOCK TABLES `migrations` WRITE;
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+INSERT INTO `migrations` VALUES (90,'2021_01_05_135847_create_comments_table',1),(93,'2014_10_12_000000_create_users_table',2),(94,'2019_08_19_000000_create_failed_jobs_table',2),(95,'2020_12_07_160601_add_name_to_contents_table',2),(96,'2020_12_07_160658_add_name_to_images_table',2),(97,'2020_12_07_160707_add_name_to_texts_table',2),(98,'2021_01_04_134508_create_projects_table',2),(99,'2021_03_06_103958_create_visitors_table',3);
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `projects`
+--
+
+DROP TABLE IF EXISTS `projects`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `projects` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `period` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `language` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `projects`
+--
+
+LOCK TABLES `projects` WRITE;
+/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
+INSERT INTO `projects` VALUES (5,'2021-02-08 08:49:53','2021-02-08 08:49:53','Search Media','https://github.com/HeesuKim0203/Movie-App','2020.4.15~2020.5.28','http://54.145.229.76:80/storage/images/IaajG5tTy13E3ONoLXUZodfdTBN1opoLOCjvAnXS.gif','세계 각국의 영화와 드라마의 정보를 보기 위해선 각국의 사이트를 방문해야했습니다. 이에 불편함을 느낀 저는 TMDb를 이용하여 세계각국의 드라마, 영화정보를 확인할 수 있고 그것을 어떤 플랫폼이 제공하는 지 알려주는 앱을 만들었습니다.','React JS HTML CSS3'),(6,'2021-02-08 08:55:06','2021-02-08 08:55:06','Ecotourism destination App','https://github.com/HeesuKim0203/Invitation-App-to-Visit-Korea','2020.5.15~2020.6.02','http://54.145.229.76:80/storage/images/xftZMBfSDJvsXUuAuzYKYrBEcdyzlqbFJ09P93XO.gif','코로나 시대가 길어짐에 따라서 실내와 관련된 관광지나 사람이 너무 많이 몰리는 놀이공원과 같은 관광지는 가기 꺼려지고 밖을 나가고 싶은 사람들을 위해서 생태 관광지를 소개 하는 앱을 만들었습니다.','Java Android'),(7,'2021-03-30 06:43:38','2021-03-30 06:43:38','Shooting Game','https://github.com/HeesuKim0203/shooting-game','2020.03.12~2020.03.21','http://54.145.229.76:80/storage/images/PuAlTpETKUBA3MK4HUaqWDbI57DpsS0egLkIyhNy.gif','모던 자바스크립트에 Canvas라는 기술이 소개되어 흥미가 생겨 개발하게 되었습니다. 게임의 규칙은 적을 처지하면 점수를 획득하고 3개의 목숨을 가집니다. 피격 당할 시 1초 무적상태가 있습니다.','JS'),(8,'2021-03-30 06:47:06','2021-03-30 06:47:06','스마트 버섯 재배','https://www.youtube.com/channel/UCD8rt1oxJYDZ0OPTy6h0DyQ','2020.11.23~개발 중','http://54.145.229.76:80/storage/images/rS7ZQMu5vr5VxT2W6ArD0dt0ancF9dDcTkIgLwtc.jpg https://www.youtube.com/embed/1PZ688qcPek?autoplay=1','코로나 시대가 도래해 실내 가드닝을 하는 사람이 늘어났습니다. 이에 대해 일본의 기사를 찾던 중 표고버섯 배지의 판매량이 증가했다는 것을 보고 조사해본 결과 표고버섯은 다른 작물에 비해 키우는 난이도가 높았습니다. 그래서 이것을 해결하기 위해 프로젝트를 시작하였습니다.','Python Arduino');
+/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `texts`
+--
+
+DROP TABLE IF EXISTS `texts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `texts` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `css` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `html` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `texts_content_id_foreign` (`content_id`),
+  CONSTRAINT `texts_content_id_foreign` FOREIGN KEY (`content_id`) REFERENCES `contents` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `texts`
+--
+
+LOCK TABLES `texts` WRITE;
+/*!40000 ALTER TABLE `texts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `texts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'rlagmltn456@naver.com',NULL,'$2y$10$8XQRSjl9Dyq8dY5Ap72kdOoVki6AmeEYPfdmKIIkMg4D8jd4/jCGS',NULL);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `visitors`
+--
+
+DROP TABLE IF EXISTS `visitors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `visitors` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `visitors`
+--
+
+LOCK TABLES `visitors` WRITE;
+/*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
+INSERT INTO `visitors` VALUES (1,'2021-03-06 11:31:44','2021-03-06 11:31:44','210.101.247.1'),(2,'2021-03-06 12:04:47','2021-03-06 12:04:47','210.101.247.125'),(3,'2021-03-07 06:10:50','2021-03-07 06:10:50','210.101.247.1'),(4,'2021-03-08 09:53:44','2021-03-08 09:53:44','210.101.247.125'),(5,'2021-03-08 13:43:50','2021-03-08 13:43:50','223.39.161.251'),(6,'2021-03-08 14:28:01','2021-03-08 14:28:01','175.201.138.27'),(7,'2021-03-08 23:35:16','2021-03-08 23:35:16','223.62.179.62'),(8,'2021-03-08 23:39:25','2021-03-08 23:39:25','210.101.247.1'),(9,'2021-03-09 00:06:12','2021-03-09 00:06:12','210.101.247.1'),(10,'2021-03-09 02:58:08','2021-03-09 02:58:08','175.201.138.27'),(11,'2021-03-09 04:01:28','2021-03-09 04:01:28','210.101.247.125'),(12,'2021-03-09 08:59:57','2021-03-09 08:59:57','223.62.179.62'),(13,'2021-03-09 23:25:06','2021-03-09 23:25:06','223.62.222.224'),(14,'2021-03-10 00:05:05','2021-03-10 00:05:05','210.101.247.125'),(15,'2021-03-10 00:51:31','2021-03-10 00:51:31','223.62.222.224'),(16,'2021-03-10 09:10:01','2021-03-10 09:10:01','106.101.66.31'),(17,'2021-03-10 09:29:54','2021-03-10 09:29:54','106.101.66.97'),(18,'2021-03-11 08:27:01','2021-03-11 08:27:01','210.101.247.125'),(19,'2021-03-12 07:28:34','2021-03-12 07:28:34','223.39.149.100'),(20,'2021-03-12 11:21:56','2021-03-12 11:21:56','210.101.247.125'),(21,'2021-03-14 10:48:48','2021-03-14 10:48:48','210.101.247.125'),(22,'2021-03-15 00:16:03','2021-03-15 00:16:03','210.101.247.125'),(23,'2021-03-15 14:20:45','2021-03-15 14:20:45','175.201.138.27'),(24,'2021-03-16 00:02:26','2021-03-16 00:02:26','210.101.247.1'),(25,'2021-03-16 02:24:10','2021-03-16 02:24:10','175.201.138.27'),(26,'2021-03-16 08:18:36','2021-03-16 08:18:36','210.101.247.125'),(27,'2021-03-17 01:51:21','2021-03-17 01:51:21','210.101.247.125'),(28,'2021-03-18 00:03:40','2021-03-18 00:03:40','210.101.247.125'),(29,'2021-03-19 01:49:49','2021-03-19 01:49:49','210.101.247.125'),(30,'2021-03-19 12:24:05','2021-03-19 12:24:05','210.101.247.1'),(31,'2021-03-20 02:10:46','2021-03-20 02:10:46','210.101.247.1'),(32,'2021-03-21 03:04:26','2021-03-21 03:04:26','210.101.247.1'),(33,'2021-03-21 06:54:56','2021-03-21 06:54:56','210.101.247.125'),(34,'2021-03-22 00:06:43','2021-03-22 00:06:43','210.101.247.1'),(35,'2021-03-23 00:40:49','2021-03-23 00:40:49','210.101.247.1'),(36,'2021-03-23 04:53:03','2021-03-23 04:53:03','210.101.247.125'),(37,'2021-03-25 10:00:55','2021-03-25 10:00:55','210.101.247.125'),(38,'2021-03-26 02:33:16','2021-03-26 02:33:16','223.33.184.196'),(39,'2021-03-26 04:31:31','2021-03-26 04:31:31','210.101.247.125'),(40,'2021-03-27 00:38:46','2021-03-27 00:38:46','175.201.138.27'),(41,'2021-03-29 15:07:19','2021-03-29 15:07:19','175.201.138.27'),(42,'2021-03-30 01:41:53','2021-03-30 01:41:53','210.101.247.1'),(43,'2021-03-30 05:39:13','2021-03-30 05:39:13','210.101.247.125'),(44,'2021-03-31 00:00:57','2021-03-31 00:00:57','210.101.247.1'),(45,'2021-04-02 00:04:33','2021-04-02 00:04:33','210.101.247.1'),(46,'2021-04-04 10:34:32','2021-04-04 10:34:32','210.101.247.125');
+/*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-04-04 12:22:57

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
 
-    protected $fillable = ['id', 'updated_at', 'title', 'url', 'period', 'image', 'description'] ;
+    protected $fillable = ['id', 'updated_at', 'title', 'url', 'period', 'image', 'description', 'language'] ;
 
-    public function create_column($title, $url, $period, $image, $description) {
-        $result = self::create([
+    public function create_column($title, $url, $period, $image, $description, $language) {
+	$result = self::create([
+	    'language' => $language,
             'title' => $title,
             'url' => $url,
             'period' => $period,
