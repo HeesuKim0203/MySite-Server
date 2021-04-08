@@ -18,14 +18,14 @@ class AddNameToContentsTable extends Migration
             $table->id() ;
             $table->string('image_url') ;
             $table->string('title') ;
-            $table->string('text', 3000) ;
+            $table->text('text') ;
             $table->string('type') ;
             $table->timestamps() ;
         });
 
-        Schema::table('contents', function (Blueprint $table) { 
-            $table->foreignId('comment_id')->constrained()->onDelete('cascade') ; 
-        });
+        // Schema::table('contents', function (Blueprint $table) { 
+        //     $table->foreignId('comment_id')->constrained()->onDelete('cascade') ; 
+        // });
     }
 
     /**
