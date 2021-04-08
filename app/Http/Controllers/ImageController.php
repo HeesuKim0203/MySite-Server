@@ -28,10 +28,9 @@ class ImageController extends Controller
     {    
         $model = new Image ;
 
-        $url = $request->file('file')->store('images', 'public') ;
-        $make_url ="http://54.145.229.76:80/storage/{$url}" ;
+        $fileName = $request->file('file')->store('images', 'public') ;
 
-        $result = $model->create_column($make_url) ;
+        $result = $model->create_column($fileName) ;
 	
         return $result ;
     }
@@ -56,8 +55,11 @@ class ImageController extends Controller
         $model = new Image() ;
 
 	$result = $model->delete_column($id) ;
-	Storage::delete(app_path("images/{$result->fileName}")) ;
+	
+	if(!$result) return response()->json([ 'result' => false ]) ;
 
-        return $result->deleteResult ;
+	Storage::disk('local')->delete("public/images/{$result}") ;
+
+        return response()->json([ 'result' => true ]) ;
     }
 }
