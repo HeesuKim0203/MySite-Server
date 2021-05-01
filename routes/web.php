@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\Storage ;
 */
 
 Route::get('/', function () {
-    return response()->json([
-        'name' => 'Abigail',
-        'state' => 'CA'
-    ]);
+    return "안녕하세요. 김희수 서버입니다.";
 });
+
+Route::get('error', function(){
+
+	header('Location: https://blog.heesu99.site/404');
+
+	return "에러!";
+}) ;
 
 

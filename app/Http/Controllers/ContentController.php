@@ -13,7 +13,7 @@ class ContentController extends Controller
         $model = new \App\Content() ;
 
         $data = $model->get_all_column() ;
-        return response()->json([ 'contents' => $data ]) ;
+        return response()->json([ 'result' => $data ]) ;
     }
 
     public function create()
@@ -32,12 +32,21 @@ class ContentController extends Controller
             $request->type
         ) ;
 
-        return $result ;
+        return response()->json([ 'result' => $result]) ;
     }
 
     public function show($id)
     {
-        return '[' . __METHOD__ . '] ' . 'respond an instance having id of ' . $id;
+	    if($id == -1) {
+	  
+	    	return response()->json([ 'result' => "에러입니다." ]) ;
+	    }
+	    $model = new Content() ;
+
+	    $result = $model->get_column($id) ;
+
+
+	    return response()->json([ 'result' => $result[0] ]) ;
     }
 
     public function edit($id)
@@ -57,5 +66,13 @@ class ContentController extends Controller
     public function destroy($id)
     {
         return '[' . __METHOD__ . '] ' . 'delete resource ' . $id;
+    }
+    public function slideContent()
+    {
+    	$model = new \App\Content() ;
+
+	$result = $model->update_contents() ;
+
+	return response()->json(['result' => $result]) ;
     }
 }

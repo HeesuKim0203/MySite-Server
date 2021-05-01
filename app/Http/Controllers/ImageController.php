@@ -30,7 +30,7 @@ class ImageController extends Controller
 
         $fileName = $request->file('file')->store('images', 'public') ;
 
-        $result = $model->create_column($fileName) ;
+        $result = $model->create_column("/{$fileName}") ;
 	
         return $result ;
     }

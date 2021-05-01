@@ -19,7 +19,8 @@ class AddNameToContentsTable extends Migration
             $table->string('image_url') ;
             $table->string('title') ;
             $table->text('text') ;
-            $table->string('type') ;
+	    $table->string('type') ;
+	    $table->text('description') ;
             $table->timestamps() ;
         });
 
